@@ -1,7 +1,9 @@
 // import express
 import express from 'express';
 import productRouter from './src/featues/product/product.router.js';
+import userRouter from './src/featues/user/user.routes.js';
 import bodyParser from 'body-parser';
+import basicAuthorizer from './src/middlewares/basicAuth.middleware.js';
 
 //create server
 const server = express();
@@ -10,7 +12,8 @@ server.use(bodyParser.json());
 
 // for all request related to product redirect to product router.
 // localhost:3000/api/products
-server.use('/api/products', productRouter);
+server.use('/api/products', basicAuthorizer, productRouter);
+server.use('/api/users', userRouter);
 
 //Default request handler
 server.get('/', (req, res) =>{
