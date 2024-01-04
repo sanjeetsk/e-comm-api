@@ -1,3 +1,4 @@
+import UserModal from '../user/user.model.js'
 export default class ProductModel{
     constructor(
        id,
@@ -39,6 +40,46 @@ export default class ProductModel{
             (!category || category === product.category))
         })
         return result;
+    }
+
+    static rateProduct(userId, productId, rating){
+        // validate user and product
+        const user = UserModal.getAll().find(U => U.id == userId);
+        if(!user){
+            return 'User Not Found';
+        }
+
+        //validate product
+        const product = products.find(u => u.id == productId);
+        if(!product){
+            return 'Product Not Found';
+        }
+
+        //Check if there are any array rating and if not then add rating array
+        if(!product.rating){
+            product.rating=[];
+            product.rating.push({
+                userId: userId,
+                rating: rating
+            });
+        }
+        else{
+            // check if rating already available 
+            const existingRatingIndex = product.rating.findIndex(r => r.userId = userId);
+            if(existingRatingIndex !== -1){
+                product.rating[existingRatingIndex] = {
+                    userId: userId,
+                    rating: rating
+                };
+            }
+            else{
+                // if no existing rating then add new rating
+                product.rating.push({
+                    userId: userId,
+                    rating: rating
+                })
+            }
+        }
     }
 }
 
