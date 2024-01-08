@@ -1,0 +1,10 @@
+
+
+{"level":"info","message":"reqUrl: / - reqBody{}"}
+{"level":"info","message":"reqUrl: /2 - reqBody{}"}
+{"level":"info","message":"reqUrl: /1 - reqBody{}"}
+{"level":"info","message":"reqUrl: / - reqBody{}"}
+{"level":"info","message":"reqUrl: / - reqBody{}"}
+{"level":"info","message":"reqUrl: /1 - reqBody{}"}
+{"error message":"Product Not Found","level":"error","request URL":"/api/products/1","timestamp":"Mon Jan 08 2024 21:23:25 GMT+0530 (India Standard Time)"}
+{"error message":"password is not defined","level":"error","request URL":"/api/users/signin","timestamp":"Mon Jan 08 2024 21:28:20 GMT+0530 (India Standard Time)"}

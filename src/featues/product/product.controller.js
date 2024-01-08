@@ -21,12 +21,7 @@ export default class ProductController{
     getOneProduct(req, res){
         const id = req.params.id;
         const product = ProductModel.get(id);
-        if(!product){
-            res.status(404).send('Product not found');
-        }
-        else{
-            return res.status(200).send(product);
-        }
+        return res.status(200).send(product);
     }
 
     filterProduct(req, res){
@@ -42,16 +37,16 @@ export default class ProductController{
         const userId = req.query.userId;
         const productId = req.query.productId;
         const rating = req.query.rating;
-        const error = ProductModel.rateProduct(
-            userId,
-            productId,
-            rating
-        )
-        if(error){
-            res.status(400).send(error);
+        try{
+            ProductModel.rateProduct(
+                userId,
+                productId,
+                rating
+            )
         }
-        else{
-            res.status(200).send("Rating has been added");
+        catch(err){
+            res.status(400).send(err.message);
         }
+        return res.status(200).send("Rating has been added");
     }
 }

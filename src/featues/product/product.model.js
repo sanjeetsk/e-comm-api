@@ -1,3 +1,4 @@
+import { ApplicationError } from '../../error-handler/applicationError.js';
 import UserModal from '../user/user.model.js'
 export default class ProductModel{
     constructor(
@@ -26,7 +27,10 @@ export default class ProductModel{
 
     static get(id){
         const product = products.find((i) => i.id == id);
-        return product;
+        if(!product){
+            throw new ApplicationError('Product Not Found', 404);
+        }
+        else return product;
     }
 
     static getAll(){
@@ -39,20 +43,23 @@ export default class ProductModel{
             (!maxPrice || maxPrice >= product.price) &&
             (!category || category === product.category))
         })
-        return result;
+        if(!result){
+            throw new ApplicationError('Product Not Found', 404);
+        }
+        else return result;
     }
 
     static rateProduct(userId, productId, rating){
         // validate user and product
         const user = UserModal.getAll().find(U => U.id == userId);
         if(!user){
-            return 'User Not Found';
+            throw new ApplicationError('User Not Found', 400);
         }
 
         //validate product
         const product = products.find(u => u.id == productId);
         if(!product){
-            return 'Product Not Found';
+            throw new ApplicationError('Product Not Found', 404);
         }
 
         //Check if there are any array rating and if not then add rating array
