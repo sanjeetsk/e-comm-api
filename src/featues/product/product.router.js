@@ -8,14 +8,19 @@ const productRouter = express.Router();
 const productController = new ProductController();
 
 // localhost:3000/api/products/filter?minPrice=10&maxPrice=100&category=Category1
-productRouter.get('/filter', productController.filterProduct)
+productRouter.get('/filter', (req, res) => {
+    productController.filterProduct(req, res)})
 
 // All the path to controller method
 // localhost:3000/api/products
-productRouter.get('/', productController.getAllProduct);
-productRouter.post('/', upload.single('imageUrl'), productController.addProduct);
-productRouter.get('/:id', productController.getOneProduct);
+productRouter.get('/', (req, res) => {
+    productController.getAllProduct(req, res)});
+productRouter.post('/', upload.single('imageUrl'), (req, res)=>{
+    productController.addProduct(req, res)});
+productRouter.get('/:id', (req, res) => {
+    productController.getOneProduct(req, res)});
 
-productRouter.post('/rate', productController.rateProduct);
+productRouter.post('/rate', (req, res)=> {
+    productController.rateProduct(req, res)});
 
 export default productRouter;

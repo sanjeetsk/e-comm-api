@@ -13,7 +13,7 @@ const jwtAuth = (req, res, next) =>{
     try{
         const payload = jwt.verify(
             token, 
-            "Xv77ua8xY7wJ5oMc5oMWNSG3xJrPu3rS"
+            process.env.JWT_SECRET
         );
         req.userId= payload.userId;
         console.log(payload);

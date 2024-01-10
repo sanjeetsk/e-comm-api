@@ -1,4 +1,5 @@
 // import express
+import "./env.js";
 import express from 'express';
 import swagger from 'swagger-ui-express';
 import cors from 'cors';
@@ -12,6 +13,7 @@ import cartRouter from './src/featues/cart/cartItems.routers.js';
 import loggerMiddleware from './src/middlewares/logger.middleware.js';
 import { errorHandlerMiddleware } from './src/error-handler/applicationError.js';
 import { invalidRoutesHandlerMiddleware } from './src/middlewares/invalidRoutes.middleware.js';
+import { connectToMongoDB } from './src/confing/mongodb.js';
 
 //create server
 const server = express();
@@ -58,4 +60,5 @@ server.use(errorHandlerMiddleware);
 //Specify port
 server.listen(3400, ()=>{
     console.log("Server is running on port 3400");
+    connectToMongoDB();
 })

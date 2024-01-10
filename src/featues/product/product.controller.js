@@ -1,52 +1,98 @@
+import { ObjectId } from "mongodb";
+import { ApplicationError } from "../../error-handler/applicationError.js";
 import ProductModel from "./product.model.js";
+import ProductRepository from "./product.repository.js";
 
-export default class ProductController{
-    getAllProduct(req, res){
-        const products = ProductModel.getAll();
-        res.status(200).send(products);
+export default class ProductController {
+    constructor() {
+        this.productRepository = new ProductRepository();
     }
-    addProduct(req, res){
-        console.log(req.body);
-        const {name, prices, sizes} = req.body;
-        const newProduct = {
-            name, 
-            prices: parseFloat(prices),
-            sizes: sizes.split(','),
-            imageUrl: req.file.filename,
-        };
-        const createdRecord = ProductModel.add(newProduct);
-        res.status(201).send(createdRecord);
-    }
-   
-    getOneProduct(req, res){
-        const id = req.params.id;
-        const product = ProductModel.get(id);
-        return res.status(200).send(product);
-    }
-
-    filterProduct(req, res){
-        const minPrice = req.query.minPrice;
-        const maxPrice = req.query.maxPrice;
-        const category = req.query.category;
-        const result = ProductModel.filter(minPrice, maxPrice, category);
-        console.log(result);
-        res.status(200).send(result);
-    }
-
-    rateProduct(req, res){
-        const userId = req.query.userId;
-        const productId = req.query.productId;
-        const rating = req.query.rating;
-        try{
-            ProductModel.rateProduct(
-                userId,
-                productId,
-                rating
-            )
+    async getAllProduct(req, res) {
+        try {
+            const products = await this.productRepository.getAll();
+            if (!products) {
+                throw new ApplicationError("No product found", 404);
+            }
+            return res.status(200).json(products);
         }
-        catch(err){
-            res.status(400).send(err.message);
+        catch (err) {
+            console.log(err);
+            throw new ApplicationError("Something went wrong", 500);
         }
-        return res.status(200).send("Rating has been added");
+    }
+
+    async addProduct(req, res) {
+        try {
+            const { name, desc, price, size } = req.body;
+            if (!name || !desc || !price) {
+                return res.status(400).json({ error: "Name, description, and price are required." });
+            }
+    
+            const newSize = size ? size.split(',') : [];
+    
+            if (!req.file || !req.file.filename) {
+                return res.status(400).json({ error: "File not provided or invalid." });
+            }
+            const newProduct =new ProductModel(
+                name,
+                desc,
+                parseFloat(price),
+                size.split(','),
+                req.file.filename,
+            );
+            console.log("pro",newProduct);
+            const createdRecord = await this.productRepository.add(newProduct);
+            return res.status(201).json(createdRecord);
+        }
+        catch (err) {
+            console.log(err);
+            throw new ApplicationError("Something went wrong", 500);
+        }
+    }
+
+    async getOneProduct(req, res) {
+        try {
+            const id = req.params.id;
+            const products = await this.productRepository.get(id);
+            if (!products) {
+                throw new ApplicationError("No product found", 404);
+            }
+            return res.status(200).json(products);
+        }
+        catch (err) {
+            console.log(err);
+            throw new ApplicationError("Something went wrong", 500);
+        }
+    }
+
+    async filterProduct(req, res) {
+        try {
+            const minPrice = req.query.minPrice;
+            const maxPrice = req.query.maxPrice;
+            const category = req.query.category;
+            const result = await this.productRepository.filter(minPrice, maxPrice, category);
+            if (!result) {
+                throw new ApplicationError('Filtered data not available', 404);
+            }
+            else res.status(200).send(result);
+        }
+        catch (err) {
+            console.log(err);
+            throw new ApplicationError("Something went wrong", 500);
+        }
+    }
+
+    async rateProduct(req, res) {
+        try {
+            const productId = req.query.productId;
+            const rating = req.query.rating;
+            const userId = req.userId;
+            await this.productRepository.rate(userId, productId, rating);
+            return res.status(200).send("Rating has been added");
+        }
+        catch (err) {
+            console.log(err);
+            throw new ApplicationError("Something went wrong", 500);
+        }
     }
 }
