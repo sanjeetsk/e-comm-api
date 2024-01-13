@@ -5,13 +5,13 @@ import { ApplicationError } from "../../error-handler/applicationError.js";
 
 class ProductRepository{
     constructor(){
-        this.products = "products";
+        this.collection = "products";
     }
 
     async add(newProduct){
         try{
             const db = getDb();
-            const collection = db.collection(this.products);
+            const collection = db.collection(this.collection);
             await collection.insertOne(newProduct);
             return newProduct;
         }
@@ -26,7 +26,7 @@ class ProductRepository{
         console.log("id", new ObjectId(id));
         try{
             const db = getDb();
-            const collection = db.collection(this.products);
+            const collection = db.collection(this.collection);
             return await collection.findOne({_id: new ObjectId(id)});
         }
         catch(err){
@@ -38,7 +38,7 @@ class ProductRepository{
     async getAll(){
         try{
             const db = getDb();
-            const collection = db.collection(this.products);
+            const collection = db.collection(this.collection);
             return await collection.find().toArray();
         }
         catch(err){
@@ -50,7 +50,7 @@ class ProductRepository{
     async filter(minPrice, maxPrice, category){
         try{
             const db = getDb();
-            const collection = db.collection(this.products);
+            const collection = db.collection(this.collection);
             let filterExpression = {};
             if(minPrice){
                 filterExpression.price = {$gte: parseFloat(minPrice)}
@@ -72,11 +72,30 @@ class ProductRepository{
     async rate(userId, productId, rating){
         try{
             const db = getDb();
-            const collection = db.collection(this.products);
-            await collection.updateOne(
-                {_id:new ObjectId(productId)}, 
-                { $push: {rating: {_id: new ObjectId(userId), rating}} }
-            )
+            const collection = db.collection(this.collection);
+            //1. Find the product
+            const product = await collection.findOne({_id: new ObjectId(productId)});
+            //2. Find the rating
+            const userRating = product?.ratings?.find(r => r.userId == userId);
+                // update the rating
+                // if(userRating){
+                //     await collection.updateOne(
+                //         {_id:new ObjectId(productId), "ratings.userId": new ObjectId(userId)},
+                //         {$set: {"ratings.$.rating": rating} } 
+                //     )
+
+            //3. Remove the existing entry
+            await collection.updateOne({
+                _id:new ObjectId(productId)
+            }, {
+                $pull: {ratings: {userId: new ObjectId(userId)}}
+            })
+            //4. Add new entry
+            await collection.updateOne({
+                _id:new ObjectId(productId)
+            },{
+                $push: {rating: {_id: new ObjectId(userId), rating}}
+            })
         }
         catch(err){
             console.log(err);
