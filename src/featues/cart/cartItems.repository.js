@@ -26,6 +26,7 @@ class CartRepository{
             throw new ApplicationError("Something went wrong in database", 500);
         }
     }
+
     async get(userId){
         try{
             const db = getDb();
@@ -37,6 +38,7 @@ class CartRepository{
             throw new ApplicationError("Something went wrong in database", 500);
         }
     }
+
     async delete(cartItemId, userId){
         try{
             const db = getDb();
@@ -49,8 +51,9 @@ class CartRepository{
             throw new ApplicationError("Something went wrong in database", 500);
         }
     }
+
     async getNextCounter(db){
-        const resultDocument = await db.collection("counter").findOneAndUpdate(
+        const resultDocument = await db.collection("counters").findOneAndUpdate(
             {_id:'cartItemId'},
             {$inc:{value: 1}},
             {returnDocument:'after'}

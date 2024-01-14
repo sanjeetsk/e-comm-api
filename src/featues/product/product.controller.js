@@ -95,4 +95,16 @@ export default class ProductController {
             throw new ApplicationError("Something went wrong", 500);
         }
     }
+
+    async averagePrice(req, res){
+        try{
+            const result = await this.productRepository.averageProductPricePerCategory();
+            console.log("avg", result);
+            return res.status(200).json(result);
+        }
+        catch (err) {
+            console.log(err);
+            throw new ApplicationError("Something went wrong", 500);
+        }
+    }
 }
