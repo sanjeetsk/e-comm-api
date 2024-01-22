@@ -1,3 +1,4 @@
+import { ApplicationError } from "../../error-handler/applicationError.js";
 import CartItemModel from "./cartItems.model.js";
 import CartRepository from "./cartItems.repository.js";
 
