@@ -73,3 +73,4 @@
 {"level":"info","message":"reqUrl: / - reqBody{\"productId\":\"659eb8bf898cb4605233040b\",\"quantity\":1}"}
 {"level":"info","message":"reqUrl: / - reqBody{\"productId\":\"659eb8bf898cb4605233040b\",\"quantity\":1}"}
 {"level":"info","message":"reqUrl: / - reqBody{\"productId\":\"659eb7f9898cb4605233040a\",\"quantity\":5}"}
+{"error message":"User validation failed: password: Password should be between 8-12 character and have a special character","level":"error","request URL":"/api/users/signup","timestamp":"Tue Jan 23 2024 21:45:54 GMT+0530 (India Standard Time)"}

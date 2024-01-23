@@ -1,7 +1,8 @@
 import { ApplicationError } from "../../error-handler/applicationError.js";
 import UserModal from "./user.model.js";
 import jwt from "jsonwebtoken";
-import UserRepository from "./user.repository.js";
+// import UserRepository from "./user.repository.js";
+import UserRepository from "./user.repository_new.js";
 import bcrypt from 'bcrypt';
 
 export default class UserController {
@@ -9,7 +10,22 @@ export default class UserController {
     constructor() {
         this.userRepository = new UserRepository();
     }
-    async signUp(req, res) {
+
+    async resetPassword(req, res){
+        const {newPassword} = req.body;
+        const hashedPassword = await bcrypt.hash(newPassword, 12);
+        const userId = req.userId;
+        try{
+            await this.userRepository.resetPassword(userId, hashedPassword);
+            return res.status(200).send("Password reset successfully");
+        }
+        catch (err) {
+            console.log(err);
+            throw new ApplicationError("Internal Server error", 500);
+        }
+    }
+
+    async signUp(req, res, next) {
         try {
             const { name, email, password, type } = req.body;
             // hashing the password using bcrypt
@@ -24,8 +40,7 @@ export default class UserController {
             return res.status(201).json(user);
         }
         catch (err) {
-            console.log(err);
-            throw new ApplicationError("Internal Server error", 500);
+            next(err);
         }
     }
 
@@ -55,7 +70,7 @@ export default class UserController {
             }
         }
         catch (err) {
-            console.log("err",err);
+            console.log("err", err);
             throw new ApplicationError("Something went wrong", 500)
         }
     }

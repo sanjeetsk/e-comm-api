@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { logger } from "../middlewares/logger.middleware.js";
 
 export class ApplicationError extends Error {
@@ -19,6 +20,10 @@ export const errorHandlerMiddleware = (err, req, res, next) => {
 
     if(err instanceof ApplicationError){
         return res.status(err.code).send(err.message);
+    }
+
+    if(err instanceof mongoose.Error.ValidationError){
+        return res.status(500).send(err.message);
     }
 
     // unhandled error
