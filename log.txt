@@ -74,3 +74,14 @@
 {"level":"info","message":"reqUrl: / - reqBody{\"productId\":\"659eb8bf898cb4605233040b\",\"quantity\":1}"}
 {"level":"info","message":"reqUrl: / - reqBody{\"productId\":\"659eb7f9898cb4605233040a\",\"quantity\":5}"}
 {"error message":"User validation failed: password: Password should be between 8-12 character and have a special character","level":"error","request URL":"/api/users/signup","timestamp":"Tue Jan 23 2024 21:45:54 GMT+0530 (India Standard Time)"}
+{"level":"info","message":"reqUrl: /rate - reqBody{\"productId\":\"659eb7f9898cb4605233040a\",\"rating\":4}"}
+{"level":"info","message":"reqUrl: /rate - reqBody{\"productId\":\"659eb7f9898cb4605233040a\",\"rating\":4}"}
+{"level":"info","message":"reqUrl: /rate - reqBody{\"productId\":\"659eb916898cb4605233040c\",\"rating\":4.3}"}
+{"level":"info","message":"reqUrl: /rate - reqBody{\"productId\":\"659eb916898cb4605233040c\",\"rating\":4.3}"}
+{"level":"info","message":"reqUrl: /rate - reqBody{\"productId\":\"659eb7f9898cb4605233040a\",\"rating\":4.3}"}
+{"level":"info","message":"reqUrl: / - reqBody{}"}
+{"level":"info","message":"reqUrl: / - reqBody{}"}
+{"level":"info","message":"reqUrl: / - reqBody{}"}
+{"level":"info","message":"reqUrl: / - reqBody{}"}
+{"level":"info","message":"reqUrl: / - reqBody{}"}
+{"error message":"likeController.getLikeItem is not a function","level":"error","request URL":"/api/likes","timestamp":"Wed Jan 24 2024 18:08:36 GMT+0530 (India Standard Time)"}

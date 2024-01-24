@@ -23,12 +23,12 @@ export default class ProductController {
 
     async addProduct(req, res) {
         try {
-            const { name, desc, price, size } = req.body;
+            const { name, desc, price, sizes, categories } = req.body;
             if (!name || !desc || !price) {
                 return res.status(400).json({ error: "Name, description, and price are required." });
             }
     
-            const newSize = size ? size.split(',') : [];
+            const newSize = sizes ? sizes.split(',') : [];
     
             if (!req.file || !req.file.filename) {
                 return res.status(400).json({ error: "File not provided or invalid." });
@@ -37,11 +37,12 @@ export default class ProductController {
                 name,
                 desc,
                 parseFloat(price),
-                size.split(','),
+                sizes.split(','),
+                categories,
                 req.file.filename,
             );
             console.log("pro",newProduct);
-            const createdRecord = await this.productRepository.add(newProduct);
+            const createdRecord = await this.productRepository.add(newProduct)
             return res.status(201).json(createdRecord);
         }
         catch (err) {
